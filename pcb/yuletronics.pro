@@ -1,4 +1,4 @@
-update=Wed 12 Oct 2016 00:11:13 BST
+update=01/11/2016 12:38:03
 version=1
 last_client=kicad
 [pcbnew]
@@ -27,7 +27,7 @@ NetIExt=net
 version=1
 [eeschema]
 version=1
-LibDir=
+LibDir=../../agg-kicad
 [eeschema/libraries]
 LibName1=libs/swd_tc
 LibName2=libs/conn
@@ -42,3 +42,4 @@ LibName10=libs/r
 LibName11=libs/pwr
 LibName12=libs/power
 LibName13=libs/mcp1700
+LibName14=I:/GitHub/agg-kicad/agg-kicad
