@@ -55,12 +55,12 @@
     IO pins assignments.
 */
 
-#define GPIOA_PIN0                     0U
-#define GPIOA_PIN1                     1U
-#define GPIOA_PIN2                     2U
+#define GPIOA_SHIFT_DATA               0U
+#define GPIOA_SHIFT_CLK                1U
+#define GPIOA_SHIFT_LATCH              2U
 #define GPIOA_PIN3                     3U
 #define GPIOA_PIN4                     4U
-#define GPIOA_PIN5                     5U
+#define GPIOA_USB_DETECT               5U
 #define GPIOA_PIN6                     6U
 #define GPIOA_PIN7                     7U
 #define GPIOA_PIN8                     8U
@@ -68,20 +68,20 @@
 #define GPIOA_PIN10                    10U
 #define GPIOA_PIN11                    11U
 #define GPIOA_PIN12                    12U
-#define GPIOA_JTMS                     13U
-#define GPIOA_JTCK                     14U
-#define GPIOA_JTDI                     15U
+#define GPIOA_SWDIO                    13U
+#define GPIOA_SWDCLK                   14U
+#define GPIOA_PIN15                    15U
 
 #define GPIOB_PIN0                     0U
 #define GPIOB_PIN1                     1U
 #define GPIOB_PIN2                     2U
-#define GPIOB_JTDO                     3U
-#define GPIOB_NJTRST                   4U
+#define GPIOB_PIN3                     3U
+#define GPIOB_PIN4                     4U
 #define GPIOB_PIN5                     5U
 #define GPIOB_PIN6                     6U
 #define GPIOB_PIN7                     7U
-#define GPIOB_CAN_RX                   8U
-#define GPIOB_CAN_TX                   9U
+#define GPIOB_PIN8                     8U
+#define GPIOB_PIN9                     9U
 #define GPIOB_PIN10                    10U
 #define GPIOB_PIN11                    11U
 #define GPIOB_PIN12                    12U
@@ -144,13 +144,12 @@
     IO lines assignments.
 */
 
-#define LINE_CAN_RX                    PAL_LINE(GPIOB, 8U)
-#define LINE_CAN_TX                    PAL_LINE(GPIOB, 9U)
-#define LINE_JTCK                      PAL_LINE(GPIOA, 14U)
-#define LINE_JTDI                      PAL_LINE(GPIOA, 15U)
-#define LINE_JTDO                      PAL_LINE(GPIOB, 3U)
-#define LINE_JTMS                      PAL_LINE(GPIOA, 13U)
-#define LINE_NJTRST                    PAL_LINE(GPIOB, 4U)
+#define LINE_SHIFT_CLK                 PAL_LINE(GPIOA, 1U)
+#define LINE_SHIFT_DATA                PAL_LINE(GPIOA, 0U)
+#define LINE_SHIFT_LATCH               PAL_LINE(GPIOA, 2U)
+#define LINE_SWDCLK                    PAL_LINE(GPIOA, 14U)
+#define LINE_SWDIO                     PAL_LINE(GPIOA, 13U)
+#define LINE_USB_DETECT                PAL_LINE(GPIOA, 5U)
 
 /*
     I/O ports initial setup, this configuration is established soon after reset
@@ -177,12 +176,12 @@
 /*
  *  GPIOA setup:
  *
- * PA0  - PIN0                         (unused).
- * PA1  - PIN1                         (unused).
- * PA2  - PIN2                         (unused).
+ * PA0  - SHIFT_DATA                   (output, pushpull).
+ * PA1  - SHIFT_CLK                    (output, pushpull).
+ * PA2  - SHIFT_LATCH                  (output, pushpull).
  * PA3  - PIN3                         (unused).
  * PA4  - PIN4                         (unused).
- * PA5  - PIN5                         (unused).
+ * PA5  - USB_DETECT                   (analog).
  * PA6  - PIN6                         (unused).
  * PA7  - PIN7                         (unused).
  * PA8  - PIN8                         (unused).
@@ -190,16 +189,16 @@
  * PA10 - PIN10                        (unused).
  * PA11 - PIN11                        (unused).
  * PA12 - PIN12                        (unused).
- * PA13 - JTMS                         (af0, pulldown).
- * PA14 - JTCK                         (af0, pulldown).
- * PA15 - JTDI                         (af0, pullup).
+ * PA13 - SWDIO                        (af0, pulldown).
+ * PA14 - SWDCLK                       (af0, pulldown).
+ * PA15 - PIN15                        (unused).
 */
-#define VAL_GPIOA_MODER                (PIN_MODE_INPUT(GPIOA_PIN0) | \
-                                        PIN_MODE_INPUT(GPIOA_PIN1) | \
-                                        PIN_MODE_INPUT(GPIOA_PIN2) | \
+#define VAL_GPIOA_MODER                (PIN_MODE_OUTPUT(GPIOA_SHIFT_DATA) | \
+                                        PIN_MODE_OUTPUT(GPIOA_SHIFT_CLK) | \
+                                        PIN_MODE_OUTPUT(GPIOA_SHIFT_LATCH) | \
                                         PIN_MODE_INPUT(GPIOA_PIN3) | \
                                         PIN_MODE_INPUT(GPIOA_PIN4) | \
-                                        PIN_MODE_INPUT(GPIOA_PIN5) | \
+                                        PIN_MODE_ANALOG(GPIOA_USB_DETECT) | \
                                         PIN_MODE_INPUT(GPIOA_PIN6) | \
                                         PIN_MODE_INPUT(GPIOA_PIN7) | \
                                         PIN_MODE_INPUT(GPIOA_PIN8) | \
@@ -207,15 +206,15 @@
                                         PIN_MODE_INPUT(GPIOA_PIN10) | \
                                         PIN_MODE_INPUT(GPIOA_PIN11) | \
                                         PIN_MODE_INPUT(GPIOA_PIN12) | \
-                                        PIN_MODE_ALTERNATE(GPIOA_JTMS) | \
-                                        PIN_MODE_ALTERNATE(GPIOA_JTCK) | \
-                                        PIN_MODE_ALTERNATE(GPIOA_JTDI))
-#define VAL_GPIOA_OTYPER               (PIN_OTYPE_PUSHPULL(GPIOA_PIN0) | \
-                                        PIN_OTYPE_PUSHPULL(GPIOA_PIN1) | \
-                                        PIN_OTYPE_PUSHPULL(GPIOA_PIN2) | \
+                                        PIN_MODE_ALTERNATE(GPIOA_SWDIO) | \
+                                        PIN_MODE_ALTERNATE(GPIOA_SWDCLK) | \
+                                        PIN_MODE_INPUT(GPIOA_PIN15))
+#define VAL_GPIOA_OTYPER               (PIN_OTYPE_PUSHPULL(GPIOA_SHIFT_DATA) | \
+                                        PIN_OTYPE_PUSHPULL(GPIOA_SHIFT_CLK) | \
+                                        PIN_OTYPE_PUSHPULL(GPIOA_SHIFT_LATCH) | \
                                         PIN_OTYPE_PUSHPULL(GPIOA_PIN3) | \
                                         PIN_OTYPE_PUSHPULL(GPIOA_PIN4) | \
-                                        PIN_OTYPE_PUSHPULL(GPIOA_PIN5) | \
+                                        PIN_OTYPE_PUSHPULL(GPIOA_USB_DETECT) | \
                                         PIN_OTYPE_PUSHPULL(GPIOA_PIN6) | \
                                         PIN_OTYPE_PUSHPULL(GPIOA_PIN7) | \
                                         PIN_OTYPE_PUSHPULL(GPIOA_PIN8) | \
@@ -223,15 +222,15 @@
                                         PIN_OTYPE_PUSHPULL(GPIOA_PIN10) | \
                                         PIN_OTYPE_PUSHPULL(GPIOA_PIN11) | \
                                         PIN_OTYPE_PUSHPULL(GPIOA_PIN12) | \
-                                        PIN_OTYPE_PUSHPULL(GPIOA_JTMS) | \
-                                        PIN_OTYPE_PUSHPULL(GPIOA_JTCK) | \
-                                        PIN_OTYPE_PUSHPULL(GPIOA_JTDI))
-#define VAL_GPIOA_OSPEEDR              (PIN_OSPEED_HIGH(GPIOA_PIN0) | \
-                                        PIN_OSPEED_HIGH(GPIOA_PIN1) | \
-                                        PIN_OSPEED_HIGH(GPIOA_PIN2) | \
+                                        PIN_OTYPE_PUSHPULL(GPIOA_SWDIO) | \
+                                        PIN_OTYPE_PUSHPULL(GPIOA_SWDCLK) | \
+                                        PIN_OTYPE_PUSHPULL(GPIOA_PIN15))
+#define VAL_GPIOA_OSPEEDR              (PIN_OSPEED_HIGH(GPIOA_SHIFT_DATA) | \
+                                        PIN_OSPEED_HIGH(GPIOA_SHIFT_CLK) | \
+                                        PIN_OSPEED_HIGH(GPIOA_SHIFT_LATCH) | \
                                         PIN_OSPEED_HIGH(GPIOA_PIN3) | \
                                         PIN_OSPEED_HIGH(GPIOA_PIN4) | \
-                                        PIN_OSPEED_HIGH(GPIOA_PIN5) | \
+                                        PIN_OSPEED_HIGH(GPIOA_USB_DETECT) | \
                                         PIN_OSPEED_HIGH(GPIOA_PIN6) | \
                                         PIN_OSPEED_HIGH(GPIOA_PIN7) | \
                                         PIN_OSPEED_HIGH(GPIOA_PIN8) | \
@@ -239,15 +238,15 @@
                                         PIN_OSPEED_HIGH(GPIOA_PIN10) | \
                                         PIN_OSPEED_HIGH(GPIOA_PIN11) | \
                                         PIN_OSPEED_HIGH(GPIOA_PIN12) | \
-                                        PIN_OSPEED_HIGH(GPIOA_JTMS) | \
-                                        PIN_OSPEED_HIGH(GPIOA_JTCK) | \
-                                        PIN_OSPEED_HIGH(GPIOA_JTDI))
-#define VAL_GPIOA_PUPDR                (PIN_PUPD_PULLUP(GPIOA_PIN0) | \
-                                        PIN_PUPD_PULLUP(GPIOA_PIN1) | \
-                                        PIN_PUPD_PULLUP(GPIOA_PIN2) | \
+                                        PIN_OSPEED_HIGH(GPIOA_SWDIO) | \
+                                        PIN_OSPEED_HIGH(GPIOA_SWDCLK) | \
+                                        PIN_OSPEED_HIGH(GPIOA_PIN15))
+#define VAL_GPIOA_PUPDR                (PIN_PUPD_PULLUP(GPIOA_SHIFT_DATA) | \
+                                        PIN_PUPD_PULLUP(GPIOA_SHIFT_CLK) | \
+                                        PIN_PUPD_PULLUP(GPIOA_SHIFT_LATCH) | \
                                         PIN_PUPD_PULLUP(GPIOA_PIN3) | \
                                         PIN_PUPD_PULLUP(GPIOA_PIN4) | \
-                                        PIN_PUPD_PULLUP(GPIOA_PIN5) | \
+                                        PIN_PUPD_PULLUP(GPIOA_USB_DETECT) | \
                                         PIN_PUPD_PULLUP(GPIOA_PIN6) | \
                                         PIN_PUPD_PULLUP(GPIOA_PIN7) | \
                                         PIN_PUPD_PULLUP(GPIOA_PIN8) | \
@@ -255,15 +254,15 @@
                                         PIN_PUPD_PULLUP(GPIOA_PIN10) | \
                                         PIN_PUPD_PULLUP(GPIOA_PIN11) | \
                                         PIN_PUPD_PULLUP(GPIOA_PIN12) | \
-                                        PIN_PUPD_PULLDOWN(GPIOA_JTMS) | \
-                                        PIN_PUPD_PULLDOWN(GPIOA_JTCK) | \
-                                        PIN_PUPD_PULLUP(GPIOA_JTDI))
-#define VAL_GPIOA_ODR                  (PIN_OD_HIGH(GPIOA_PIN0) | \
-                                        PIN_OD_HIGH(GPIOA_PIN1) | \
-                                        PIN_OD_HIGH(GPIOA_PIN2) | \
+                                        PIN_PUPD_PULLDOWN(GPIOA_SWDIO) | \
+                                        PIN_PUPD_PULLDOWN(GPIOA_SWDCLK) | \
+                                        PIN_PUPD_PULLUP(GPIOA_PIN15))
+#define VAL_GPIOA_ODR                  (PIN_OD_HIGH(GPIOA_SHIFT_DATA) | \
+                                        PIN_OD_HIGH(GPIOA_SHIFT_CLK) | \
+                                        PIN_OD_HIGH(GPIOA_SHIFT_LATCH) | \
                                         PIN_OD_HIGH(GPIOA_PIN3) | \
                                         PIN_OD_HIGH(GPIOA_PIN4) | \
-                                        PIN_OD_HIGH(GPIOA_PIN5) | \
+                                        PIN_OD_HIGH(GPIOA_USB_DETECT) | \
                                         PIN_OD_HIGH(GPIOA_PIN6) | \
                                         PIN_OD_HIGH(GPIOA_PIN7) | \
                                         PIN_OD_HIGH(GPIOA_PIN8) | \
@@ -271,15 +270,15 @@
                                         PIN_OD_HIGH(GPIOA_PIN10) | \
                                         PIN_OD_HIGH(GPIOA_PIN11) | \
                                         PIN_OD_HIGH(GPIOA_PIN12) | \
-                                        PIN_OD_HIGH(GPIOA_JTMS) | \
-                                        PIN_OD_HIGH(GPIOA_JTCK) | \
-                                        PIN_OD_HIGH(GPIOA_JTDI))
-#define VAL_GPIOA_AFRL                 (PIN_AFIO_AF(GPIOA_PIN0, 0U) | \
-                                        PIN_AFIO_AF(GPIOA_PIN1, 0U) | \
-                                        PIN_AFIO_AF(GPIOA_PIN2, 0U) | \
+                                        PIN_OD_HIGH(GPIOA_SWDIO) | \
+                                        PIN_OD_HIGH(GPIOA_SWDCLK) | \
+                                        PIN_OD_HIGH(GPIOA_PIN15))
+#define VAL_GPIOA_AFRL                 (PIN_AFIO_AF(GPIOA_SHIFT_DATA, 0U) | \
+                                        PIN_AFIO_AF(GPIOA_SHIFT_CLK, 0U) | \
+                                        PIN_AFIO_AF(GPIOA_SHIFT_LATCH, 0U) | \
                                         PIN_AFIO_AF(GPIOA_PIN3, 0U) | \
                                         PIN_AFIO_AF(GPIOA_PIN4, 0U) | \
-                                        PIN_AFIO_AF(GPIOA_PIN5, 0U) | \
+                                        PIN_AFIO_AF(GPIOA_USB_DETECT, 0U) | \
                                         PIN_AFIO_AF(GPIOA_PIN6, 0U) | \
                                         PIN_AFIO_AF(GPIOA_PIN7, 0U))
 #define VAL_GPIOA_AFRH                 (PIN_AFIO_AF(GPIOA_PIN8, 0U) | \
@@ -287,9 +286,9 @@
                                         PIN_AFIO_AF(GPIOA_PIN10, 0U) | \
                                         PIN_AFIO_AF(GPIOA_PIN11, 0U) | \
                                         PIN_AFIO_AF(GPIOA_PIN12, 0U) | \
-                                        PIN_AFIO_AF(GPIOA_JTMS, 0U) | \
-                                        PIN_AFIO_AF(GPIOA_JTCK, 0U) | \
-                                        PIN_AFIO_AF(GPIOA_JTDI, 0U))
+                                        PIN_AFIO_AF(GPIOA_SWDIO, 0U) | \
+                                        PIN_AFIO_AF(GPIOA_SWDCLK, 0U) | \
+                                        PIN_AFIO_AF(GPIOA_PIN15, 0U))
 
 /*
  *  GPIOB setup:
@@ -297,13 +296,13 @@
  * PB0  - PIN0                         (unused).
  * PB1  - PIN1                         (unused).
  * PB2  - PIN2                         (unused).
- * PB3  - JTDO                         (af0).
- * PB4  - NJTRST                       (af0, pullup).
+ * PB3  - PIN3                         (unused).
+ * PB4  - PIN4                         (unused).
  * PB5  - PIN5                         (unused).
  * PB6  - PIN6                         (unused).
  * PB7  - PIN7                         (unused).
- * PB8  - CAN_RX                       (af9).
- * PB9  - CAN_TX                       (af9).
+ * PB8  - PIN8                         (unused).
+ * PB9  - PIN9                         (unused).
  * PB10 - PIN10                        (unused).
  * PB11 - PIN11                        (unused).
  * PB12 - PIN12                        (unused).
@@ -314,13 +313,13 @@
 #define VAL_GPIOB_MODER                (PIN_MODE_INPUT(GPIOB_PIN0) | \
                                         PIN_MODE_INPUT(GPIOB_PIN1) | \
                                         PIN_MODE_INPUT(GPIOB_PIN2) | \
-                                        PIN_MODE_ALTERNATE(GPIOB_JTDO) | \
-                                        PIN_MODE_ALTERNATE(GPIOB_NJTRST) | \
+                                        PIN_MODE_INPUT(GPIOB_PIN3) | \
+                                        PIN_MODE_INPUT(GPIOB_PIN4) | \
                                         PIN_MODE_INPUT(GPIOB_PIN5) | \
                                         PIN_MODE_INPUT(GPIOB_PIN6) | \
                                         PIN_MODE_INPUT(GPIOB_PIN7) | \
-                                        PIN_MODE_ALTERNATE(GPIOB_CAN_RX) | \
-                                        PIN_MODE_ALTERNATE(GPIOB_CAN_TX) | \
+                                        PIN_MODE_INPUT(GPIOB_PIN8) | \
+                                        PIN_MODE_INPUT(GPIOB_PIN9) | \
                                         PIN_MODE_INPUT(GPIOB_PIN10) | \
                                         PIN_MODE_INPUT(GPIOB_PIN11) | \
                                         PIN_MODE_INPUT(GPIOB_PIN12) | \
@@ -330,13 +329,13 @@
 #define VAL_GPIOB_OTYPER               (PIN_OTYPE_PUSHPULL(GPIOB_PIN0) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_PIN1) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_PIN2) | \
-                                        PIN_OTYPE_PUSHPULL(GPIOB_JTDO) | \
-                                        PIN_OTYPE_PUSHPULL(GPIOB_NJTRST) | \
+                                        PIN_OTYPE_PUSHPULL(GPIOB_PIN3) | \
+                                        PIN_OTYPE_PUSHPULL(GPIOB_PIN4) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_PIN5) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_PIN6) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_PIN7) | \
-                                        PIN_OTYPE_PUSHPULL(GPIOB_CAN_RX) | \
-                                        PIN_OTYPE_PUSHPULL(GPIOB_CAN_TX) | \
+                                        PIN_OTYPE_PUSHPULL(GPIOB_PIN8) | \
+                                        PIN_OTYPE_PUSHPULL(GPIOB_PIN9) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_PIN10) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_PIN11) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_PIN12) | \
@@ -346,13 +345,13 @@
 #define VAL_GPIOB_OSPEEDR              (PIN_OSPEED_HIGH(GPIOB_PIN0) | \
                                         PIN_OSPEED_HIGH(GPIOB_PIN1) | \
                                         PIN_OSPEED_HIGH(GPIOB_PIN2) | \
-                                        PIN_OSPEED_HIGH(GPIOB_JTDO) | \
-                                        PIN_OSPEED_HIGH(GPIOB_NJTRST) | \
+                                        PIN_OSPEED_HIGH(GPIOB_PIN3) | \
+                                        PIN_OSPEED_HIGH(GPIOB_PIN4) | \
                                         PIN_OSPEED_HIGH(GPIOB_PIN5) | \
                                         PIN_OSPEED_HIGH(GPIOB_PIN6) | \
                                         PIN_OSPEED_HIGH(GPIOB_PIN7) | \
-                                        PIN_OSPEED_HIGH(GPIOB_CAN_RX) | \
-                                        PIN_OSPEED_HIGH(GPIOB_CAN_TX) | \
+                                        PIN_OSPEED_HIGH(GPIOB_PIN8) | \
+                                        PIN_OSPEED_HIGH(GPIOB_PIN9) | \
                                         PIN_OSPEED_HIGH(GPIOB_PIN10) | \
                                         PIN_OSPEED_HIGH(GPIOB_PIN11) | \
                                         PIN_OSPEED_HIGH(GPIOB_PIN12) | \
@@ -362,13 +361,13 @@
 #define VAL_GPIOB_PUPDR                (PIN_PUPD_PULLUP(GPIOB_PIN0) | \
                                         PIN_PUPD_PULLUP(GPIOB_PIN1) | \
                                         PIN_PUPD_PULLUP(GPIOB_PIN2) | \
-                                        PIN_PUPD_PULLUP(GPIOB_JTDO) | \
-                                        PIN_PUPD_PULLUP(GPIOB_NJTRST) | \
+                                        PIN_PUPD_PULLUP(GPIOB_PIN3) | \
+                                        PIN_PUPD_PULLUP(GPIOB_PIN4) | \
                                         PIN_PUPD_PULLUP(GPIOB_PIN5) | \
                                         PIN_PUPD_PULLUP(GPIOB_PIN6) | \
                                         PIN_PUPD_PULLUP(GPIOB_PIN7) | \
-                                        PIN_PUPD_PULLUP(GPIOB_CAN_RX) | \
-                                        PIN_PUPD_PULLUP(GPIOB_CAN_TX) | \
+                                        PIN_PUPD_PULLUP(GPIOB_PIN8) | \
+                                        PIN_PUPD_PULLUP(GPIOB_PIN9) | \
                                         PIN_PUPD_PULLUP(GPIOB_PIN10) | \
                                         PIN_PUPD_PULLUP(GPIOB_PIN11) | \
                                         PIN_PUPD_PULLUP(GPIOB_PIN12) | \
@@ -378,13 +377,13 @@
 #define VAL_GPIOB_ODR                  (PIN_OD_HIGH(GPIOB_PIN0) | \
                                         PIN_OD_HIGH(GPIOB_PIN1) | \
                                         PIN_OD_HIGH(GPIOB_PIN2) | \
-                                        PIN_OD_HIGH(GPIOB_JTDO) | \
-                                        PIN_OD_HIGH(GPIOB_NJTRST) | \
+                                        PIN_OD_HIGH(GPIOB_PIN3) | \
+                                        PIN_OD_HIGH(GPIOB_PIN4) | \
                                         PIN_OD_HIGH(GPIOB_PIN5) | \
                                         PIN_OD_HIGH(GPIOB_PIN6) | \
                                         PIN_OD_HIGH(GPIOB_PIN7) | \
-                                        PIN_OD_HIGH(GPIOB_CAN_RX) | \
-                                        PIN_OD_HIGH(GPIOB_CAN_TX) | \
+                                        PIN_OD_HIGH(GPIOB_PIN8) | \
+                                        PIN_OD_HIGH(GPIOB_PIN9) | \
                                         PIN_OD_HIGH(GPIOB_PIN10) | \
                                         PIN_OD_HIGH(GPIOB_PIN11) | \
                                         PIN_OD_HIGH(GPIOB_PIN12) | \
@@ -394,13 +393,13 @@
 #define VAL_GPIOB_AFRL                 (PIN_AFIO_AF(GPIOB_PIN0, 0U) | \
                                         PIN_AFIO_AF(GPIOB_PIN1, 0U) | \
                                         PIN_AFIO_AF(GPIOB_PIN2, 0U) | \
-                                        PIN_AFIO_AF(GPIOB_JTDO, 0U) | \
-                                        PIN_AFIO_AF(GPIOB_NJTRST, 0U) | \
+                                        PIN_AFIO_AF(GPIOB_PIN3, 0U) | \
+                                        PIN_AFIO_AF(GPIOB_PIN4, 0U) | \
                                         PIN_AFIO_AF(GPIOB_PIN5, 0U) | \
                                         PIN_AFIO_AF(GPIOB_PIN6, 0U) | \
                                         PIN_AFIO_AF(GPIOB_PIN7, 0U))
-#define VAL_GPIOB_AFRH                 (PIN_AFIO_AF(GPIOB_CAN_RX, 9U) | \
-                                        PIN_AFIO_AF(GPIOB_CAN_TX, 9U) | \
+#define VAL_GPIOB_AFRH                 (PIN_AFIO_AF(GPIOB_PIN8, 0U) | \
+                                        PIN_AFIO_AF(GPIOB_PIN9, 0U) | \
                                         PIN_AFIO_AF(GPIOB_PIN10, 0U) | \
                                         PIN_AFIO_AF(GPIOB_PIN11, 0U) | \
                                         PIN_AFIO_AF(GPIOB_PIN12, 0U) | \
