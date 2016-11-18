@@ -176,9 +176,9 @@
 /*
  *  GPIOA setup:
  *
- * PA0  - SHIFT_DATA                   (output, pushpull).
- * PA1  - SHIFT_CLK                    (output, pushpull).
- * PA2  - SHIFT_LATCH                  (output, pushpull).
+ * PA0  - SHIFT_DATA                   (output, pushpull, startlow).
+ * PA1  - SHIFT_CLK                    (output, pushpull, startlow).
+ * PA2  - SHIFT_LATCH                  (output, pushpull, startlow).
  * PA3  - PIN3                         (unused).
  * PA4  - PIN4                         (unused).
  * PA5  - USB_DETECT                   (analog).
@@ -257,9 +257,9 @@
                                         PIN_PUPD_PULLDOWN(GPIOA_SWDIO) | \
                                         PIN_PUPD_PULLDOWN(GPIOA_SWDCLK) | \
                                         PIN_PUPD_PULLUP(GPIOA_PIN15))
-#define VAL_GPIOA_ODR                  (PIN_OD_HIGH(GPIOA_SHIFT_DATA) | \
-                                        PIN_OD_HIGH(GPIOA_SHIFT_CLK) | \
-                                        PIN_OD_HIGH(GPIOA_SHIFT_LATCH) | \
+#define VAL_GPIOA_ODR                  (PIN_OD_LOW(GPIOA_SHIFT_DATA) | \
+                                        PIN_OD_LOW(GPIOA_SHIFT_CLK) | \
+                                        PIN_OD_LOW(GPIOA_SHIFT_LATCH) | \
                                         PIN_OD_HIGH(GPIOA_PIN3) | \
                                         PIN_OD_HIGH(GPIOA_PIN4) | \
                                         PIN_OD_HIGH(GPIOA_USB_DETECT) | \

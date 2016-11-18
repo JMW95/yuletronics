@@ -10,6 +10,6 @@ pins:
     
     USB_DETECT: pa5, analog
     
-    SHIFT_DATA: pa0, output, pushpull
-    SHIFT_CLK: pa1, output, pushpull
-    SHIFT_LATCH: pa2, output, pushpull
+    SHIFT_DATA: pa0, output, pushpull, startlow
+    SHIFT_CLK: pa1, output, pushpull, startlow
+    SHIFT_LATCH: pa2, output, pushpull, startlow
