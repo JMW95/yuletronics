@@ -20,7 +20,8 @@ void display_init(){
 
 void display_update(){
     // Show each column of the screen, with a 1ms delay between each
-    for(int  i=0; i<5; i++){
+    int i;
+    for(i=0; i<5; i++){
         uint8_t col = ~(1 << (7-i)); // set one column to LOW
         uint8_t row = (screen[i] & 0x1f) << 1;
         uint32_t shift_pattern = leds | (col<<8) | (row<<16);
@@ -36,7 +37,8 @@ void screen_show_char(char c){
     if(c>=' ' && c <= '~')
         val = FONT_TABLE[c-' '];
     
-    for(int col=0; col<5; col++){
+    int col;
+    for(col=0; col<5; col++){
         screen[col] = val >> (5*col);
     }
 }

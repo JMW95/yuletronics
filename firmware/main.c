@@ -70,4 +70,6 @@ int main(void) {
 
     // Allow idle sleep to take over
     chThdSleep(TIME_INFINITE);
+    
+    return 0;
 }
