@@ -30,7 +30,7 @@ THD_FUNCTION(leds_update, arg){
     }
 }
 
-static const char message[] = {'T', 'e', 's', 't', 'i', 'n', 'g', '.'};
+static const char message[] = {'M', 'e', 'r', 'r', 'y', ' ', 'C', 'h', 'r', 'i', 's', 't', 'm', 'a', 's'};
 
 // Write some text on the screen
 static THD_WORKING_AREA(waText, 256);
@@ -58,7 +58,7 @@ int main(void) {
     chSysInit();
 
     display_init();
-    
+
     //TODO: seed the RNG using a few ADC reads?
 
     chThdCreateStatic(waScreenRefresh, sizeof(waScreenRefresh), NORMALPRIO,
@@ -70,6 +70,6 @@ int main(void) {
 
     // Allow idle sleep to take over
     chThdSleep(TIME_INFINITE);
-    
+
     return 0;
 }

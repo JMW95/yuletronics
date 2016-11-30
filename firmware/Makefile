@@ -233,6 +233,9 @@ flash: build/$(PROJECT).elf $(OUTFILES)
 					  -ex 'load' \
 					  -ex 'compare-sections' build/$(PROJECT).elf
 
+dfu: build/$(PROJECT).bin
+	dfu-util -d '0483:df11' -a 0 -s 0x08000000 -D build/$(PROJECT).bin
+
 debug: build/$(PROJECT).elf $(OUTFILES)
 	arm-none-eabi-gdb -ex 'target extended-remote $(BMP_PORT)' \
 		              -ex 'monitor jtag_scan' \
