@@ -156,7 +156,7 @@ INCDIR = $(STARTUPINC) $(KERNINC) $(PORTINC) $(OSALINC) \
 # Compiler settings
 #
 
-MCU  = cortex-m4
+MCU  = cortex-m0
 
 #TRGT = arm-elf-
 TRGT = arm-none-eabi-
@@ -229,7 +229,7 @@ flash: build/$(PROJECT).elf $(OUTFILES)
 		              -ex 'target extended-remote $(BMP_PORT)' \
 					  -ex 'monitor version' \
 					  -ex 'monitor jtag_scan' \
-					  -ex "attach $(shell $(JTAG_SCAN) --find $(PROJECT))" \
+					  -ex "attach 0" \
 					  -ex 'load' \
 					  -ex 'compare-sections' build/$(PROJECT).elf
 
