@@ -5,7 +5,7 @@
 #include "display.h"
 #include "font.h"
 
-static const char message[] = "Happy new year";
+static const char message[] = "HO HO HO MERRY CHRISTMAS  ";
 
 // Each entry is a column, with LSB = top row
 uint8_t screen[5];
@@ -35,15 +35,16 @@ void display_show(){
 }
 
 void display_update(){
-    static int i = 0;
+    static uint32_t i = 0;
 
-    uint32_t charnum;
-    uint8_t column;
+    uint32_t charnum = i / 6;
+    uint8_t column = i % 6;
     uint32_t fontchar;
-
-    charnum = i / 6;
-    column = i % 6;
-    fontchar = FONT_TABLE[message[charnum]-' '];
+    if (message[charnum] != 0){
+        fontchar  = FONT_TABLE[message[charnum]-' '];
+    }else{
+        fontchar = 0;
+    }
 
     i += 1;
     if(i >= 6*sizeof(message)){
@@ -51,13 +52,14 @@ void display_update(){
     }
 
     // Scroll the current screen along by 1 column
-    for(i=0; i<5; i++){
-        screen[i] = screen[i+1];
+    int j;
+    for(j=4; j>0; j--){
+        screen[j] = screen[j-1];
     }
     if(column < 5){ // Leave a blank column at the end
-        screen[4] = (fontchar >> (column*5)) & 0x1f;
+        screen[0] = (fontchar >> ((4-column)*5));
     }else{
-        screen[4] = 0;
+        screen[0] = 0;
     }
 }
 

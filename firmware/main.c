@@ -37,7 +37,7 @@ THD_FUNCTION(text_update, arg){
     chRegSetThreadName("Text");
     while(TRUE){
         display_update();
-        chThdSleepMilliseconds(500);
+        chThdSleepMilliseconds(60);
     }
 }
 
