@@ -15,8 +15,7 @@
 
 void display_init(void);
 void display_update(void);
-
-void screen_show_char(char c);
+void display_show(void);
 
 void led_turn_on(int which);
 void led_turn_off(int which);

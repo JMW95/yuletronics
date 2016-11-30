@@ -5,6 +5,8 @@
 #include "display.h"
 #include "font.h"
 
+static const char message[] = "Happy new year";
+
 // Each entry is a column, with LSB = top row
 uint8_t screen[5];
 uint8_t leds;
@@ -18,7 +20,7 @@ void display_init(){
     }
 }
 
-void display_update(){
+void display_show(){
     // Show each column of the screen, with a 1ms delay between each
     int i;
     for(i=0; i<5; i++){
@@ -32,14 +34,30 @@ void display_update(){
     }
 }
 
-void screen_show_char(char c){
-    uint32_t val = 0;
-    if(c>=' ' && c <= '~')
-        val = FONT_TABLE[c-' '];
-    
-    int col;
-    for(col=0; col<5; col++){
-        screen[col] = val >> (5*col);
+void display_update(){
+    static int i = 0;
+
+    uint32_t charnum;
+    uint8_t colnum;
+    uint32_t fontchar;
+
+    charnum = i / 6;
+    column = i % 6;
+    fontchar = FONT_TABLE[message[charnum]-' '];
+
+    i += 1;
+    if(i >= 6*sizeof(message)){
+        i = 0;
+    }
+
+    // Scroll the current screen along by 1 column
+    for(i=0; i<5; i++){
+        screen[i] = screen[i+1];
+    }
+    if(column < 5){ // Leave a blank column at the end
+        screen[4] = (fontchar >> (column*5)) & 0x1f;
+    }else{
+        screen[4] = 0;
     }
 }
 

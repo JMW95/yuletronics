@@ -10,7 +10,7 @@ THD_FUNCTION(screen_refresh, arg){
     (void)arg;
     chRegSetThreadName("Screen refresh");
     while(TRUE){
-        display_update();
+        display_show();
     }
 }
 
@@ -30,20 +30,13 @@ THD_FUNCTION(leds_update, arg){
     }
 }
 
-static const char message[] = {'M', 'e', 'r', 'r', 'y', ' ', 'C', 'h', 'r', 'i', 's', 't', 'm', 'a', 's'};
-
 // Write some text on the screen
 static THD_WORKING_AREA(waText, 256);
 THD_FUNCTION(text_update, arg){
     (void)arg;
     chRegSetThreadName("Text");
-    uint32_t i = 0;
     while(TRUE){
-        screen_show_char(message[i]);
-        i += 1;
-        if(i >= sizeof(message)){
-            i = 0;
-        }
+        display_update();
         chThdSleepMilliseconds(500);
     }
 }
