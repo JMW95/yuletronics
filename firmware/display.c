@@ -38,7 +38,7 @@ void display_update(){
     static int i = 0;
 
     uint32_t charnum;
-    uint8_t colnum;
+    uint8_t column;
     uint32_t fontchar;
 
     charnum = i / 6;
