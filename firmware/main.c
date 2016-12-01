@@ -15,7 +15,7 @@ THD_FUNCTION(screen_refresh, arg){
 }
 
 // Randomly turn on and off the edge LEDs
-//static THD_WORKING_AREA(waLEDS, 128);
+static THD_WORKING_AREA(waLEDS, 128);
 THD_FUNCTION(leds_update, arg){
     (void)arg;
     chRegSetThreadName("LEDs");
@@ -56,8 +56,8 @@ int main(void) {
 
     chThdCreateStatic(waScreenRefresh, sizeof(waScreenRefresh), NORMALPRIO,
                     screen_refresh, NULL);
-    //chThdCreateStatic(waLEDS, sizeof(waLEDS), NORMALPRIO,
-    //                leds_update, NULL);
+    chThdCreateStatic(waLEDS, sizeof(waLEDS), NORMALPRIO,
+                    leds_update, NULL);
     chThdCreateStatic(waText, sizeof(waText), NORMALPRIO,
                     text_update, NULL);
 

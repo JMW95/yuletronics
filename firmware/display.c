@@ -11,25 +11,54 @@ static const char message[] = "HO HO HO MERRY CHRISTMAS  ";
 uint8_t screen[5];
 uint8_t leds;
 
+#define MAX_BRIGHTNESS  8
+// Ordering of LEDS:     4 3 2 5
+//                       8 7 6 1
+uint8_t brightness[8] = {MAX_BRIGHTNESS, 1, 1, 1,
+                         1, MAX_BRIGHTNESS, MAX_BRIGHTNESS, MAX_BRIGHTNESS};
+uint8_t pwm_tick[8];
+
 void display_init(){
     shiftreg_init();
-    leds = 0;
-    int i=0;
+
+    leds = 255;
+
+    int i;
     for(i=0; i<5; i++){
         screen[i] = 0;
+    }
+
+    for(i=0; i<8; i++){
+        pwm_tick[i] = 0;
     }
 }
 
 void display_show(){
-    // Show each column of the screen, with a 1ms delay between each
     int i;
+
+    // Show each column of the screen, with a 1ms delay between each
     for(i=0; i<5; i++){
+        // Update PWM of LEDs
+        uint8_t pwm_mask = 0;
+        int j;
+        for(j=0; j<8; j++){
+            if (pwm_tick[j] < brightness[j]){
+                pwm_mask |= 1 << j;
+            }
+
+            pwm_tick[j] += 1;
+
+            if (pwm_tick[j] >= MAX_BRIGHTNESS){
+                pwm_tick[j] = 0;
+            }
+        }
+
         uint8_t col = ~(1 << (4-i)); // set one column to LOW
         uint8_t row = (screen[i] & 0x1f) << 2;
-        uint32_t shift_pattern = leds | (col<<8) | (row<<16);
-        
+        uint32_t shift_pattern = (leds & pwm_mask) | (col<<8) | (row<<16);
+
         shiftreg_send(shift_pattern, 24);
-        
+
         chThdSleepMilliseconds(1);
     }
 }
