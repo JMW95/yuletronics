@@ -4,6 +4,16 @@
 #include "rand.h"
 #include "display.h"
 
+static const char *messages[] = {
+    "MERRY CHRISTMAS",
+    "HO HO HO",
+    "JINGLE BELLS",
+    "SANTA CLAUS",
+    "SLEIGH BELLS RING",
+    "DECK THE HALLS",
+};
+#define NUM_MESSAGES    6
+
 // Constantly redraw the screen
 static THD_WORKING_AREA(waScreenRefresh, 256);
 THD_FUNCTION(screen_refresh, arg){
@@ -35,8 +45,35 @@ static THD_WORKING_AREA(waText, 256);
 THD_FUNCTION(text_update, arg){
     (void)arg;
     chRegSetThreadName("Text");
+    
+    uint32_t mode = 0;
+    uint32_t counter = 0;
+    uint8_t messagenum = 0;
+    
+    display_scroll_text(messages[0]);
+    
     while(TRUE){
-        display_update();
+        switch(mode){
+            case 0: // Scroll text
+                if(display_update()){
+                    display_scroll_text(""); // Blank the display
+                    mode += 1;
+                    counter = 0;
+                }
+                break;
+            case 1: // Wait then choose another message
+                display_update();
+                counter += 1;
+                if(counter == 50){ // Wait 3 seconds
+                    messagenum += 1;
+                    if(messagenum >= NUM_MESSAGES){
+                        messagenum = 0;
+                    }
+                    display_scroll_text(messages[messagenum]);
+                    mode = 0;
+                }
+                break;
+        }
         chThdSleepMilliseconds(60);
     }
 }

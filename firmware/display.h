@@ -14,7 +14,8 @@
 #define LED8    3
 
 void display_init(void);
-void display_update(void);
+void display_scroll_text(const char *str);
+bool display_update(void);
 void display_show(void);
 
 void led_turn_on(int which);

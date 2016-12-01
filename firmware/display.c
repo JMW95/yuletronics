@@ -5,8 +5,6 @@
 #include "display.h"
 #include "font.h"
 
-static const char message[] = "HO HO HO MERRY CHRISTMAS  ";
-
 // Each entry is a column, with LSB = top row
 uint8_t screen[5];
 uint8_t leds;
@@ -63,21 +61,31 @@ void display_show(){
     }
 }
 
-void display_update(){
+static char message[255];
+void display_scroll_text(const char *str){
+    const char *p = str;
+    char *d = message;
+    while(*p){
+        *d++ = *p++;
+    }
+    *d = 0; // Terminate with a null-byte
+}
+
+bool display_update(){
     static uint32_t i = 0;
+
+    bool retval = false;
 
     uint32_t charnum = i / 6;
     uint8_t column = i % 6;
     uint32_t fontchar;
+    i += 1;
     if (message[charnum] != 0){
         fontchar  = FONT_TABLE[message[charnum]-' '];
     }else{
         fontchar = 0;
-    }
-
-    i += 1;
-    if(i >= 6*sizeof(message)){
         i = 0;
+        retval = true;
     }
 
     // Scroll the current screen along by 1 column
@@ -90,6 +98,8 @@ void display_update(){
     }else{
         screen[0] = 0;
     }
+
+    return retval;
 }
 
 void led_turn_on(int which){
