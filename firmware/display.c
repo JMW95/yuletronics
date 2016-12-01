@@ -67,7 +67,7 @@ void display_scroll_text(const char *str){
     *d = 0; // Terminate with a null-byte
 }
 
-bool display_update(){
+bool display_scroll(){
     static uint32_t i = 0;
 
     bool retval = false;
@@ -81,7 +81,7 @@ bool display_update(){
     }else{
         fontchar = 0;
         i = 0;
-        retval = true;
+        retval = true; // Return true if we're done scrolling
     }
 
     // Scroll the current screen along by 1 column

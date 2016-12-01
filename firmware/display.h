@@ -15,7 +15,7 @@
 
 void display_init(void);
 void display_scroll_text(const char *str);
-bool display_update(void);
+bool display_scroll(void);
 void display_show(void);
 
 void led_turn_on(int which);

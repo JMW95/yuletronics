@@ -55,14 +55,14 @@ THD_FUNCTION(text_update, arg){
     while(TRUE){
         switch(mode){
             case 0: // Scroll text
-                if(display_update()){
+                if(display_scroll()){
                     display_scroll_text(""); // Blank the display
                     mode += 1;
                     counter = 0;
                 }
                 break;
             case 1: // Wait then choose another message
-                display_update();
+                display_scroll();
                 counter += 1;
                 if(counter == 50){ // Wait 3 seconds
                     messagenum += 1;
