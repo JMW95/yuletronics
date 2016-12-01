@@ -3,6 +3,7 @@
 
 #include "rand.h"
 #include "display.h"
+#include "animations.h"
 
 static const char *messages[] = {
     "MERRY CHRISTMAS",
@@ -47,34 +48,49 @@ THD_FUNCTION(text_update, arg){
     chRegSetThreadName("Text");
     
     uint32_t mode = 0;
-    uint32_t counter = 0;
+    uint32_t delay = 60;
     uint8_t messagenum = 0;
+    uint8_t animnum = 0;
     
-    display_scroll_text(messages[0]);
+    display_scroll_text(messages[messagenum]);
+    display_set_anim(animnum);
     
     while(TRUE){
         switch(mode){
             case 0: // Scroll text
+                delay = 60;
                 if(display_scroll()){
                     display_scroll_text(""); // Blank the display
-                    mode += 1;
-                    counter = 0;
+                    mode = 3;
                 }
                 break;
             case 1: // Wait then choose another message
-                display_scroll();
-                counter += 1;
-                if(counter == 50){ // Wait 3 seconds
-                    messagenum += 1;
-                    if(messagenum >= NUM_MESSAGES){
-                        messagenum = 0;
-                    }
-                    display_scroll_text(messages[messagenum]);
-                    mode = 0;
+                delay = 3000;
+                messagenum += 1;
+                if(messagenum >= NUM_MESSAGES){
+                    messagenum = 0;
+                }
+                display_scroll_text(messages[messagenum]);
+                mode = 0;
+                break;
+            case 2: // Display an animation
+                delay = 100;
+                if(display_anim()){
+                    display_clear();
+                    mode = 1;
                 }
                 break;
+            case 3: // Wait then choose another animation
+                animnum += 1;
+                delay = 3000;
+                if(animnum >= NUM_ANIMS){
+                    animnum = 0;
+                }
+                display_set_anim(animnum);
+                mode = 2;
+                break;
         }
-        chThdSleepMilliseconds(60);
+        chThdSleepMilliseconds(delay);
     }
 }
 

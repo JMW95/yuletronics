@@ -4,8 +4,9 @@
 #include "shiftreg.h"
 #include "display.h"
 #include "font.h"
+#include "animations.h"
 
-// Each entry is a column, with LSB = top row
+// Each entry is a column, with LSB = bottom row
 uint8_t screen[5];
 uint8_t leds;
 
@@ -21,10 +22,7 @@ void display_init(){
 
     leds = 255;
 
-    int i;
-    for(i=0; i<5; i++){
-        screen[i] = 0;
-    }
+    display_clear();
 }
 
 void display_show(){
@@ -80,8 +78,10 @@ bool display_scroll(){
         fontchar  = FONT_TABLE[message[charnum]-' '];
     }else{
         fontchar = 0;
-        i = 0;
-        retval = true; // Return true if we're done scrolling
+        if(column == 5){
+            i = 0;
+            retval = true; // Return true if we're done scrolling
+        }
     }
 
     // Scroll the current screen along by 1 column
@@ -96,6 +96,37 @@ bool display_scroll(){
     }
 
     return retval;
+}
+
+static uint8_t animidx = 0;
+static uint32_t frame = 0;
+void display_set_anim(uint8_t idx){
+    if(idx < NUM_ANIMS){
+        animidx = idx;
+        frame = 0;
+    }
+}
+
+bool display_anim(){
+    bool retval = false;
+    frame += 1;
+    if (frame >= ANIM_LENS[animidx]){
+        frame = 0;
+        retval = true; // Return true if the animation is over
+    }
+
+    int i;
+    for(i=0; i<5; i++){
+        screen[i] = ANIMS[animidx][frame] >> (i*5);
+    }
+    return retval;
+}
+
+void display_clear(){
+    int i;
+    for(i=0; i<5; i++){
+        screen[i] = 0;
+    }
 }
 
 void led_turn_on(int which){
