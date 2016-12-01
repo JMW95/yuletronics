@@ -14,7 +14,7 @@ uint8_t leds;
 //                       8 7 6 1
 uint8_t brightness[8] = {MAX_BRIGHTNESS, 1, 1, 1,
                          1, MAX_BRIGHTNESS, MAX_BRIGHTNESS, MAX_BRIGHTNESS};
-uint8_t pwm_tick[8];
+uint8_t pwm_tick = 0;
 
 void display_init(){
     shiftreg_init();
@@ -25,10 +25,6 @@ void display_init(){
     for(i=0; i<5; i++){
         screen[i] = 0;
     }
-
-    for(i=0; i<8; i++){
-        pwm_tick[i] = 0;
-    }
 }
 
 void display_show(){
@@ -38,16 +34,16 @@ void display_show(){
     for(i=0; i<5; i++){
         // Update PWM of LEDs
         uint8_t pwm_mask = 0;
+
+        pwm_tick += 1;
+        if (pwm_tick >= MAX_BRIGHTNESS){
+            pwm_tick = 0;
+        }
+
         int j;
         for(j=0; j<8; j++){
-            if (pwm_tick[j] < brightness[j]){
+            if (pwm_tick < brightness[j]){
                 pwm_mask |= 1 << j;
-            }
-
-            pwm_tick[j] += 1;
-
-            if (pwm_tick[j] >= MAX_BRIGHTNESS){
-                pwm_tick[j] = 0;
             }
         }
 
