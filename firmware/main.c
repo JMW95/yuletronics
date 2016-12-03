@@ -58,7 +58,7 @@ THD_FUNCTION(text_update, arg){
     while(TRUE){
         switch(mode){
             case 0: // Scroll text
-                delay = 60;
+                delay = 80;
                 if(display_scroll()){
                     display_scroll_text(""); // Blank the display
                     mode = 3;
