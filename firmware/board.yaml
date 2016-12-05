@@ -9,6 +9,8 @@ pins:
     SWDCLK: pa14, af0, pulldown
     
     USB_DETECT: pa5, analog
+
+    SWITCH: pb8, input, floating
     
     SHIFT_DATA: pa0, output, pushpull, startlow
     SHIFT_CLK: pa1, output, pushpull, startlow

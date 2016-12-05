@@ -80,7 +80,7 @@
 #define GPIOB_PIN5                     5U
 #define GPIOB_PIN6                     6U
 #define GPIOB_PIN7                     7U
-#define GPIOB_PIN8                     8U
+#define GPIOB_SWITCH                   8U
 #define GPIOB_PIN9                     9U
 #define GPIOB_PIN10                    10U
 #define GPIOB_PIN11                    11U
@@ -149,6 +149,7 @@
 #define LINE_SHIFT_LATCH               PAL_LINE(GPIOA, 2U)
 #define LINE_SWDCLK                    PAL_LINE(GPIOA, 14U)
 #define LINE_SWDIO                     PAL_LINE(GPIOA, 13U)
+#define LINE_SWITCH                    PAL_LINE(GPIOB, 8U)
 #define LINE_USB_DETECT                PAL_LINE(GPIOA, 5U)
 
 /*
@@ -301,7 +302,7 @@
  * PB5  - PIN5                         (unused).
  * PB6  - PIN6                         (unused).
  * PB7  - PIN7                         (unused).
- * PB8  - PIN8                         (unused).
+ * PB8  - SWITCH                       (input, floating).
  * PB9  - PIN9                         (unused).
  * PB10 - PIN10                        (unused).
  * PB11 - PIN11                        (unused).
@@ -318,7 +319,7 @@
                                         PIN_MODE_INPUT(GPIOB_PIN5) | \
                                         PIN_MODE_INPUT(GPIOB_PIN6) | \
                                         PIN_MODE_INPUT(GPIOB_PIN7) | \
-                                        PIN_MODE_INPUT(GPIOB_PIN8) | \
+                                        PIN_MODE_INPUT(GPIOB_SWITCH) | \
                                         PIN_MODE_INPUT(GPIOB_PIN9) | \
                                         PIN_MODE_INPUT(GPIOB_PIN10) | \
                                         PIN_MODE_INPUT(GPIOB_PIN11) | \
@@ -334,7 +335,7 @@
                                         PIN_OTYPE_PUSHPULL(GPIOB_PIN5) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_PIN6) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_PIN7) | \
-                                        PIN_OTYPE_PUSHPULL(GPIOB_PIN8) | \
+                                        PIN_OTYPE_PUSHPULL(GPIOB_SWITCH) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_PIN9) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_PIN10) | \
                                         PIN_OTYPE_PUSHPULL(GPIOB_PIN11) | \
@@ -350,7 +351,7 @@
                                         PIN_OSPEED_HIGH(GPIOB_PIN5) | \
                                         PIN_OSPEED_HIGH(GPIOB_PIN6) | \
                                         PIN_OSPEED_HIGH(GPIOB_PIN7) | \
-                                        PIN_OSPEED_HIGH(GPIOB_PIN8) | \
+                                        PIN_OSPEED_HIGH(GPIOB_SWITCH) | \
                                         PIN_OSPEED_HIGH(GPIOB_PIN9) | \
                                         PIN_OSPEED_HIGH(GPIOB_PIN10) | \
                                         PIN_OSPEED_HIGH(GPIOB_PIN11) | \
@@ -366,7 +367,7 @@
                                         PIN_PUPD_PULLUP(GPIOB_PIN5) | \
                                         PIN_PUPD_PULLUP(GPIOB_PIN6) | \
                                         PIN_PUPD_PULLUP(GPIOB_PIN7) | \
-                                        PIN_PUPD_PULLUP(GPIOB_PIN8) | \
+                                        PIN_PUPD_FLOATING(GPIOB_SWITCH) | \
                                         PIN_PUPD_PULLUP(GPIOB_PIN9) | \
                                         PIN_PUPD_PULLUP(GPIOB_PIN10) | \
                                         PIN_PUPD_PULLUP(GPIOB_PIN11) | \
@@ -382,7 +383,7 @@
                                         PIN_OD_HIGH(GPIOB_PIN5) | \
                                         PIN_OD_HIGH(GPIOB_PIN6) | \
                                         PIN_OD_HIGH(GPIOB_PIN7) | \
-                                        PIN_OD_HIGH(GPIOB_PIN8) | \
+                                        PIN_OD_HIGH(GPIOB_SWITCH) | \
                                         PIN_OD_HIGH(GPIOB_PIN9) | \
                                         PIN_OD_HIGH(GPIOB_PIN10) | \
                                         PIN_OD_HIGH(GPIOB_PIN11) | \
@@ -398,7 +399,7 @@
                                         PIN_AFIO_AF(GPIOB_PIN5, 0U) | \
                                         PIN_AFIO_AF(GPIOB_PIN6, 0U) | \
                                         PIN_AFIO_AF(GPIOB_PIN7, 0U))
-#define VAL_GPIOB_AFRH                 (PIN_AFIO_AF(GPIOB_PIN8, 0U) | \
+#define VAL_GPIOB_AFRH                 (PIN_AFIO_AF(GPIOB_SWITCH, 0U) | \
                                         PIN_AFIO_AF(GPIOB_PIN9, 0U) | \
                                         PIN_AFIO_AF(GPIOB_PIN10, 0U) | \
                                         PIN_AFIO_AF(GPIOB_PIN11, 0U) | \
