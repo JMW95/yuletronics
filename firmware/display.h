@@ -19,6 +19,7 @@ void display_set_anim(uint8_t idx);
 bool display_scroll(void);
 bool display_anim(void);
 void display_clear(void);
+void display_copy(uint8_t data[]);
 void display_show(void);
 
 void led_turn_on(int which);

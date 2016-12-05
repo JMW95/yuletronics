@@ -115,7 +115,7 @@ CSRC = $(STARTUPSRC) \
        $(PLATFORMSRC) \
        $(BOARDSRC) \
        $(TESTSRC) \
-       main.c shiftreg.c display.c rand.c
+       main.c shiftreg.c display.c rand.c easter_egg.c
 
 # C++ sources that can be compiled in ARM or THUMB mode depending on the global
 # setting.

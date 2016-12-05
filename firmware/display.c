@@ -25,6 +25,13 @@ void display_init(){
     display_clear();
 }
 
+void display_copy(uint8_t data[]){
+    int i;
+    for(i=0; i<5; i++){
+        screen[i] = data[i];
+    }
+}
+
 void display_show(){
     int i;
 
@@ -55,6 +62,7 @@ void display_show(){
     }
 }
 
+static uint32_t scrollpos = 0;
 static char message[255];
 void display_scroll_text(const char *str){
     const char *p = str;
@@ -63,23 +71,23 @@ void display_scroll_text(const char *str){
         *d++ = *p++;
     }
     *d = 0; // Terminate with a null-byte
+    scrollpos = 0;
 }
 
 bool display_scroll(){
-    static uint32_t i = 0;
 
     bool retval = false;
 
-    uint32_t charnum = i / 6;
-    uint8_t column = i % 6;
+    uint32_t charnum = scrollpos / 6;
+    uint8_t column = scrollpos % 6;
     uint32_t fontchar;
-    i += 1;
+    scrollpos += 1;
     if (message[charnum] != 0){
         fontchar  = FONT_TABLE[message[charnum]-' '];
     }else{
         fontchar = 0;
         if(column == 5){
-            i = 0;
+            scrollpos = 0;
             retval = true; // Return true if we're done scrolling
         }
     }
