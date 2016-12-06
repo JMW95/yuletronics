@@ -5,6 +5,7 @@
 #include "display.h"
 #include "animations.h"
 #include "easter_egg.h"
+#include "usb.h"
 
 static bool easterEggMode = false;
 static uint32_t mode = 0;
@@ -35,11 +36,16 @@ THD_FUNCTION(leds_update, arg){
     (void)arg;
     chRegSetThreadName("LEDs");
     while(TRUE){
-        int led = rand() % 8;
-        if(rand() & 1){
-            led_turn_on(led);
+        if(serusbcfg.usbp->state == USB_ACTIVE){
+            led_turn_on(1);
         }else{
-            led_turn_off(led);
+            //int led = rand() % 8;
+            //if(rand() & 1){
+            //    led_turn_on(led);
+            //}else{
+            //    led_turn_off(led);
+            //}
+            led_turn_off(1);
         }
         chThdSleepMilliseconds(250 + (rand() % 512));
     }
@@ -136,7 +142,7 @@ int main(void) {
     // Remap the USB pins to the physical pins
     SYSCFG->CFGR1 |= SYSCFG_CFGR1_PA11_PA12_RMP;
     chSysInit();
-
+    
     display_init();
 
     //TODO: seed the RNG using a few ADC reads?
@@ -149,6 +155,20 @@ int main(void) {
                     text_update, NULL);
     chThdCreateStatic(waEasterEgg, sizeof(waEasterEgg), NORMALPRIO,
                     easter_egg, NULL);
+
+    sduObjectInit(&SDU1);
+    
+    sduStart(&SDU1, &serusbcfg);
+
+    /*
+    * Activates the USB driver and then the USB bus pull-up on D+.
+    * Note, a delay is inserted in order to not have to disconnect the cable
+    * after a reset.
+    */
+    usbDisconnectBus(serusbcfg.usbp);
+    chThdSleepMilliseconds(1500);
+    usbStart(serusbcfg.usbp, &usbcfg);
+    usbConnectBus(serusbcfg.usbp);
 
     // Allow idle sleep to take over
     chThdSleep(TIME_INFINITE);
