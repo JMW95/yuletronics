@@ -1,5 +1,6 @@
 #include "ch.h"
 #include "hal.h"
+#include "chprintf.h"
 
 #include "rand.h"
 #include "display.h"
@@ -36,16 +37,11 @@ THD_FUNCTION(leds_update, arg){
     (void)arg;
     chRegSetThreadName("LEDs");
     while(TRUE){
-        if(serusbcfg.usbp->state == USB_ACTIVE){
-            led_turn_on(1);
+        int led = rand() % 8;
+        if(rand() & 1){
+            led_turn_on(led);
         }else{
-            //int led = rand() % 8;
-            //if(rand() & 1){
-            //    led_turn_on(led);
-            //}else{
-            //    led_turn_off(led);
-            //}
-            led_turn_off(1);
+            led_turn_off(led);
         }
         chThdSleepMilliseconds(250 + (rand() % 512));
     }
@@ -108,6 +104,10 @@ THD_FUNCTION(text_update, arg){
                         messagenum = 0;
                     }
                     display_scroll_text(messages[messagenum]);
+                    if(serusbcfg.usbp->state == USB_ACTIVE){
+                        chprintf((BaseSequentialStream *)&SDU1, messages[messagenum]);
+                        chprintf((BaseSequentialStream *)&SDU1, "\r\n");
+                    }
                     mode = 0;
                     break;
                 case 2: // Display an animation
