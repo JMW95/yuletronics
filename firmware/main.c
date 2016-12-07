@@ -22,7 +22,7 @@ static const char *messages[] = {
 #define NUM_MESSAGES    6
 
 // Constantly redraw the screen
-static THD_WORKING_AREA(waScreenRefresh, 256);
+static THD_WORKING_AREA(waScreenRefresh, 128);
 THD_FUNCTION(screen_refresh, arg){
     (void)arg;
     chRegSetThreadName("Screen refresh");
@@ -32,7 +32,7 @@ THD_FUNCTION(screen_refresh, arg){
 }
 
 // Randomly turn on and off the edge LEDs
-static THD_WORKING_AREA(waLEDS, 128);
+static THD_WORKING_AREA(waLEDS, 64);
 THD_FUNCTION(leds_update, arg){
     (void)arg;
     chRegSetThreadName("LEDs");
@@ -48,7 +48,7 @@ THD_FUNCTION(leds_update, arg){
 }
 
 // Launch the easter egg if the button is held
-static THD_WORKING_AREA(waEasterEgg, 256);
+static THD_WORKING_AREA(waEasterEgg, 128);
 THD_FUNCTION(easter_egg, arg){
     (void)arg;
     chRegSetThreadName("Easter Egg");
@@ -134,6 +134,44 @@ THD_FUNCTION(text_update, arg){
     }
 }
 
+// Write some text on the screen
+static THD_WORKING_AREA(waSerial, 256);
+THD_FUNCTION(serial_read, arg){
+    (void)arg;
+    chRegSetThreadName("Serial");
+    static char buf[255];
+    uint32_t count = 0;
+    int read = 0;
+    uint8_t c;
+    while(TRUE){
+        read = chSequentialStreamRead((BaseSequentialStream *)&SDU1,
+                                      &c, 1);
+        if(read > 0){
+            if(c == '\n'){
+                buf[count] = 0;
+                count = 0;
+                display_scroll_text(buf);
+                mode = 0;
+                while(mode == 0){
+                    chThdSleepMilliseconds(10);
+                }
+            }else{
+                buf[count] = (char)c;
+                count++;
+                if(count == sizeof(buf)){
+                    buf[count-1] = 0;
+                    display_scroll_text(buf);
+                    mode = 0;
+                    while(mode == 0){
+                        chThdSleepMilliseconds(10);
+                    }
+                }
+            }
+        }
+        chThdSleepMilliseconds(1);
+    }
+}
+
 int main(void) {
     /* Allow debug access during STOP/STANDBY */
     DBGMCU->CR |= DBGMCU_CR_DBG_STOP;
@@ -155,6 +193,8 @@ int main(void) {
                     text_update, NULL);
     chThdCreateStatic(waEasterEgg, sizeof(waEasterEgg), NORMALPRIO,
                     easter_egg, NULL);
+    chThdCreateStatic(waSerial, sizeof(waSerial), NORMALPRIO,
+                    serial_read, NULL);
 
     sduObjectInit(&SDU1);
     
