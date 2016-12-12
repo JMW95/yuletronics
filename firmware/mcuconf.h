@@ -48,7 +48,7 @@
 #define STM32_SW                            STM32_SW_PLL
 #define STM32_PLLSRC                        STM32_PLLSRC_HSI_DIV2
 #define STM32_PREDIV_VALUE                  1
-#define STM32_PLLMUL_VALUE                  12
+#define STM32_PLLMUL_VALUE                  4
 #define STM32_HPRE                          STM32_HPRE_DIV1
 #define STM32_PPRE                          STM32_PPRE_DIV1
 #define STM32_ADCSW                         STM32_ADCSW_HSI14
