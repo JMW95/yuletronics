@@ -8,6 +8,9 @@
 #include "easter_egg.h"
 #include "usb.h"
 
+// Uncomment to enable USB
+//#define USE_USB
+
 static bool easterEggMode = false;
 static uint32_t mode = 0;
 
@@ -104,10 +107,12 @@ THD_FUNCTION(text_update, arg){
                         messagenum = 0;
                     }
                     display_scroll_text(messages[messagenum]);
+#ifdef USE_USB
                     if(serusbcfg.usbp->state == USB_ACTIVE){
                         chprintf((BaseSequentialStream *)&SDU1, messages[messagenum]);
                         chprintf((BaseSequentialStream *)&SDU1, "\r\n");
                     }
+#endif
                     mode = 0;
                     break;
                 case 2: // Display an animation
@@ -134,7 +139,8 @@ THD_FUNCTION(text_update, arg){
     }
 }
 
-// Write some text on the screen
+#ifdef USE_USB
+// Read the USB port and display text
 static THD_WORKING_AREA(waSerial, 256);
 THD_FUNCTION(serial_read, arg){
     (void)arg;
@@ -171,6 +177,7 @@ THD_FUNCTION(serial_read, arg){
         chThdSleepMilliseconds(1);
     }
 }
+#endif
 
 int main(void) {
     /* Allow debug access during STOP/STANDBY */
@@ -193,11 +200,12 @@ int main(void) {
                     text_update, NULL);
     chThdCreateStatic(waEasterEgg, sizeof(waEasterEgg), NORMALPRIO,
                     easter_egg, NULL);
+#ifdef USE_USB
     chThdCreateStatic(waSerial, sizeof(waSerial), NORMALPRIO,
                     serial_read, NULL);
 
     sduObjectInit(&SDU1);
-    
+
     sduStart(&SDU1, &serusbcfg);
 
     /*
@@ -209,6 +217,7 @@ int main(void) {
     chThdSleepMilliseconds(1500);
     usbStart(serusbcfg.usbp, &usbcfg);
     usbConnectBus(serusbcfg.usbp);
+#endif
 
     // Allow idle sleep to take over
     chThdSleep(TIME_INFINITE);
