@@ -11,6 +11,9 @@
 // Uncomment to enable USB
 //#define USE_USB
 
+// Uncomment to enable low-power mode
+//#define LOW_POWER_MODE
+
 static bool easterEggMode = false;
 static uint32_t mode = 0;
 
@@ -100,8 +103,7 @@ THD_FUNCTION(text_update, arg){
                         mode = 3;
                     }
                     break;
-                case 1: // Wait then choose another message
-                    delay = 3000;
+                case 1: // Choose another message
                     messagenum += 1;
                     if(messagenum >= NUM_MESSAGES){
                         messagenum = 0;
@@ -113,7 +115,7 @@ THD_FUNCTION(text_update, arg){
                         chprintf((BaseSequentialStream *)&SDU1, "\r\n");
                     }
 #endif
-                    mode = 0;
+                    mode = 4;
                     break;
                 case 2: // Display an animation
                     delay = 100;
@@ -122,14 +124,30 @@ THD_FUNCTION(text_update, arg){
                         mode = 1;
                     }
                     break;
-                case 3: // Wait then choose another animation
+                case 3: // Choose another animation
                     animnum += 1;
-                    delay = 3000;
                     if(animnum >= NUM_ANIMS){
                         animnum = 0;
                     }
                     display_set_anim(animnum);
-                    mode = 2;
+                    mode = 5;
+                    break;
+                case 4: // Check for low-power mode then continue
+                case 5:
+#ifdef LOW_POWER_MODE
+                    delay = 200;
+                    if(palReadLine(LINE_SWITCH)){
+#else
+                    delay = 3000;
+#endif
+                        if(mode == 4){
+                            mode = 0;
+                        }else{
+                            mode = 2;
+                        }
+#ifdef LOW_POWER_MODE
+                    }
+#endif
                     break;
             }
             chThdSleepMilliseconds(delay);
