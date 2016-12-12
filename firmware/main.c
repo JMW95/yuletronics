@@ -1,3 +1,5 @@
+#include "yuletronics_config.h"
+
 #include "ch.h"
 #include "hal.h"
 #include "chprintf.h"
@@ -5,14 +7,14 @@
 #include "rand.h"
 #include "display.h"
 #include "animations.h"
-#include "easter_egg.h"
-#include "usb.h"
 
-// Uncomment to enable USB
-//#define USE_USB
+#if EASTER_EGG
+    #include "easter_egg.h"
+#endif
 
-// Uncomment to enable low-power mode
-//#define LOW_POWER_MODE
+#if USE_USB
+    #include "usb.h"
+#endif
 
 static bool easterEggMode = false;
 static uint32_t mode = 0;
@@ -53,6 +55,7 @@ THD_FUNCTION(leds_update, arg){
     }
 }
 
+#if EASTER_EGG
 // Launch the easter egg if the button is held
 static THD_WORKING_AREA(waEasterEgg, 128);
 THD_FUNCTION(easter_egg, arg){
@@ -79,6 +82,7 @@ THD_FUNCTION(easter_egg, arg){
         chThdSleep(100);
     }
 }
+#endif
 
 // Write some text on the screen
 static THD_WORKING_AREA(waText, 256);
@@ -109,7 +113,7 @@ THD_FUNCTION(text_update, arg){
                         messagenum = 0;
                     }
                     display_scroll_text(messages[messagenum]);
-#ifdef USE_USB
+#if USE_USB
                     if(serusbcfg.usbp->state == USB_ACTIVE){
                         chprintf((BaseSequentialStream *)&SDU1, messages[messagenum]);
                         chprintf((BaseSequentialStream *)&SDU1, "\r\n");
@@ -134,20 +138,19 @@ THD_FUNCTION(text_update, arg){
                     break;
                 case 4: // Check for low-power mode then continue
                 case 5:
-#ifdef LOW_POWER_MODE
+#if AUTO_ANIMATIONS
+                    delay = 3000;
+                    {
+#else
                     delay = 200;
                     if(palReadLine(LINE_SWITCH)){
-#else
-                    delay = 3000;
 #endif
                         if(mode == 4){
                             mode = 0;
                         }else{
                             mode = 2;
                         }
-#ifdef LOW_POWER_MODE
                     }
-#endif
                     break;
             }
             chThdSleepMilliseconds(delay);
@@ -157,7 +160,7 @@ THD_FUNCTION(text_update, arg){
     }
 }
 
-#ifdef USE_USB
+#if USE_USB
 // Read the USB port and display text
 static THD_WORKING_AREA(waSerial, 256);
 THD_FUNCTION(serial_read, arg){
@@ -216,9 +219,11 @@ int main(void) {
                     leds_update, NULL);
     chThdCreateStatic(waText, sizeof(waText), NORMALPRIO,
                     text_update, NULL);
+#if EASTER_EGG
     chThdCreateStatic(waEasterEgg, sizeof(waEasterEgg), NORMALPRIO,
                     easter_egg, NULL);
-#ifdef USE_USB
+#endif
+#if USE_USB
     chThdCreateStatic(waSerial, sizeof(waSerial), NORMALPRIO,
                     serial_read, NULL);
 

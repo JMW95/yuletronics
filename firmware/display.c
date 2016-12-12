@@ -1,3 +1,5 @@
+#include "yuletronics_config.h"
+
 #include "ch.h"
 #include "hal.h"
 
@@ -10,11 +12,20 @@
 uint8_t screen[5];
 uint8_t leds;
 
-#define MAX_BRIGHTNESS  8
+#if LOW_BRIGHTNESS
+    #define MAX_BRIGHTNESS  16
+    #define NORMAL_LEDS     8
+    #define DIM_LEDS        1
+#else
+    #define MAX_BRIGHTNESS  8
+    #define NORMAL_LEDS     8
+    #define DIM_LEDS        1
+#endif
+
 // Ordering of LEDS:     4 3 2 5
 //                       8 7 6 1
-uint8_t brightness[8] = {MAX_BRIGHTNESS, 1, 1, 1,
-                         1, MAX_BRIGHTNESS, MAX_BRIGHTNESS, MAX_BRIGHTNESS};
+uint8_t brightness[8] = {NORMAL_LEDS, DIM_LEDS, DIM_LEDS, DIM_LEDS,
+                         DIM_LEDS, NORMAL_LEDS, NORMAL_LEDS, NORMAL_LEDS};
 uint8_t pwm_tick = 0;
 
 void display_init(){
