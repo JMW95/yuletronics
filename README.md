@@ -1,11 +1,8 @@
 # Yuletronics: Electronics Club Project Michaelmas 2016
 
-This repository contains the example Yuletronics project for Electronics Club. 
-You can either use git to clone it, or simply download it 
-[here](https://github.com/adamgreig/yuletronics/archive/master.zip).
+A small electronic Christmas decoration with a 5x5 pixel LED screen.
 
-You'll need KiCAD to open and edit the PCB: [download it 
-here](http://kicad-pcb.org/). If you can easily get a nightly build, they have 
-a few nice new features.
+Scrolls festive messages across the screen, and plays Flappy Bird!
 
-![3d render](pcb/yuletronics.png)
+Firmware written in C using ChibiOS for the STM32F042F6P6 microcontroller.
+PCB designed in KiCAD. Download it [here](http://kicad-pcb.org/).
